@@ -1,0 +1,48 @@
+JOINT_TYPE NAME
+{
+
+
+}
+
+BEGIN = JOINT
+
+JOINT = JOINT_TYPE NAME { INFORMATION }
+NAME = string
+JOINT_TYPE = balljoint
+INFORMATION = OFFSET | BOXMIN | BOXMAX | ROTXLIMIT | ROTYLIMIT | ROTZLIMIT | POSE | JOINT
+
+
+
+parse_joint()
+	=> parse_joint_type(); OK
+	=> parse_name(); OK
+	=> parse_open_paranthesis(); OK
+	=> parse_informations();
+		=> parse_offset();
+			=> parse_float();
+			=> parse_float();
+			=> parse_float();
+		| => parse_box_min();
+			=> parse_float();
+			=> parse_float();
+			=> parse_float();
+		| => parse_box_max();
+			=> parse_float();
+			=> parse_float();
+			=> parse_float();
+		| => parse_rotxlimit();
+			=> parse_int();
+			=> parse_int();
+		| => parse_rotylimit();
+			=> parse_int();
+			=> parse_int();
+		| => parse_rotzlimit();
+			=> parse_int();
+			=> parse_int();
+		| => parse_pose();
+			=> parse_int();
+			=> parse_int();
+			=> parse_int();
+		| => parse_joint();
+	=> parse_close_paranthesis();
+
