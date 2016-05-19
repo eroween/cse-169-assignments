@@ -31,6 +31,15 @@ public:
         return 0;
     }
 
+    void    joints(QVector<joint *> &res)
+    {
+        res.push_back(this);
+        foreach (joint *child, this->m_childrens)
+        {
+            child->joints(res);
+        }
+    }
+
 public:
 
     void    add_child(joint *child) {

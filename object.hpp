@@ -14,7 +14,7 @@ public:
     virtual ~object(void);
 
 public:
-    virtual void    update(void);
+    virtual void    update(float elapsed);
     virtual void    render(const QMatrix4x4 &projection, const QMatrix4x4 &view, const QMatrix4x4 &model);
 
 public:

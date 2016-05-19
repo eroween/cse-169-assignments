@@ -48,11 +48,12 @@ public:
     /// \brief load a skel file
     /// \param filename the filename of the file that will be loaded.
     ///
-    void    load(const QString &skel_file, const QString &skin_file);
+    void    load(const QString &skel_file, const QString &skin_file, const QString &anim_file);
 
 public:
-    void    load_async(const QString &skel_file, const QString &skin_file) {
+    void    load_async(const QString &skel_file, const QString &skin_file, const QString &anim_file) {
         skin_name = skin_file;
+        anim_name = anim_file;
         skel_name = skel_file;
         m_load = true;
     }
@@ -88,6 +89,7 @@ private:
 
     bool m_load;
     QString     skin_name;
+    QString     anim_name;
     QString     skel_name;
 };
 

@@ -17,7 +17,16 @@ SOURCES += main.cpp \
     cube.cpp \
     skin_loader.cpp \
     skin.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    channel.cpp \
+    animationloader.cpp \
+    animationplayer.cpp \
+    cloth.cpp \
+    particle.cpp \
+    springdamper.cpp \
+    environment.cpp \
+    triangle.cpp \
+    plane.cpp
 
 SOURCES += \
     mainwidget.cpp \
@@ -39,7 +48,16 @@ HEADERS += \
     cube.hpp \
     skin_loader.hpp \
     skin.hpp \
-    mainwindow.h
+    mainwindow.h \
+    channel.hpp \
+    animationloader.hpp \
+    animationplayer.hpp \
+    cloth.hpp \
+    particle.hpp \
+    springdamper.hpp \
+    environment.hpp \
+    triangle.hpp \
+    plane.hpp
 
 RESOURCES += \
     shaders.qrc \

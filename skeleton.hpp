@@ -4,6 +4,7 @@
 
 #include <QOpenGLShaderProgram>
 #include "joint.hpp"
+#include "balljoint.hpp"
 
 class skeleton
 {
@@ -39,6 +40,15 @@ public:
         this->m_root->world_matrices(res, identity);
         return res;
     }
+
+    QVector<joint *>    joints(void)
+    {
+        QVector<joint *> res;
+
+        this->m_root->joints(res);
+        return res;
+    }
+
 
 public:
     void    render(const QMatrix4x4 &projection, const QMatrix4x4 &view, const QMatrix4x4 &model, QOpenGLShaderProgram *program);

@@ -12,7 +12,7 @@ public:
     virtual ~entity(void);
 
 public:
-    virtual void    update(void) = 0;
+    virtual void    update(float elapsed) = 0;
     virtual void    render(const QMatrix4x4 &projection, const QMatrix4x4 &view, const QMatrix4x4 &model) = 0;
 
 protected:

@@ -7,7 +7,7 @@
 #include "object.hpp"
 #include "skeleton.hpp"
 #include <QtMath>
-
+#include "environment.hpp"
 
 MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
     QMainWindow(parent),
@@ -37,6 +37,14 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) :
     connect(ui->rotationx, SIGNAL(valueChanged(double)), this, SLOT(on_rotationx_changed(double)));
     connect(ui->rotationy, SIGNAL(valueChanged(double)), this, SLOT(on_rotationy_changed(double)));
     connect(ui->rotationz, SIGNAL(valueChanged(double)), this, SLOT(on_rotationz_changed(double)));
+
+    ui->positionx_4->setValue(Environment::gravity.x());
+    ui->positiony_4->setValue(Environment::gravity.y());
+    ui->positionz_4->setValue(Environment::gravity.z());
+
+    ui->positionx_3->setValue(Environment::wind.x());
+    ui->positiony_3->setValue(Environment::wind.y());
+    ui->positionz_3->setValue(Environment::wind.z());
 
 }
 
@@ -202,11 +210,9 @@ MainWindow::on_rotationz_changed(double val) {
     bj->m_rotation.setZ(qDegreesToRadians(val));
 }
 
-
-
 void MainWindow::on_actionTest_triggered()
 {
-    ui->openGLWidget->load_async("wasp.skel", "wasp.skin");
+    ui->openGLWidget->load_async("wasp.skel", "wasp.skin", "wasp.anim");
 }
 
 void
@@ -231,17 +237,32 @@ MainWindow::change_select(QTreeWidgetItem*item,QTreeWidgetItem*) {
             ui->treeWidget_2->clear();
             qDebug() << "found smthg else";
         }
+
+        QVector3D   pos = node->get_transform().position();
+
+        ui->positionx_2->setValue(pos.x());
+        ui->positiony_2->setValue(pos.y());
+        ui->positionz_2->setValue(pos.z());
+
+        // display node data
+
+
+
     }
+
+
 }
 
 void
 MainWindow::display_obj(object *obj) {
     skeleton *skel = obj->get_skeleton();
-    joint* jt = skel->root_joint();
     ui->treeWidget_2->clear();
     ui->treeWidget_2->setColumnCount(1);
-    this->fill_skel_tree(0, jt);
-    ui->treeWidget_2->expandAll();
+    if (skel != 0) {
+        joint* jt = skel->root_joint();
+        this->fill_skel_tree(0, jt);
+        ui->treeWidget_2->expandAll();
+    }
 }
 
 void
@@ -259,7 +280,7 @@ MainWindow::fill_skel_tree(QTreeWidgetItem *wi_parent, joint *parent) {
 
 void MainWindow::on_actionTube_triggered()
 {
-    ui->openGLWidget->load_async("tube.skel", "smooth_tube.skin");
+//    ui->openGLWidget->load_async("tube.skel", "smooth_tube.skin");
 }
 
 void
@@ -289,4 +310,90 @@ MainWindow::skel_change_select(QTreeWidgetItem *item, QTreeWidgetItem *) {
     ui->positionx->setValue(bj->m_position.x());
     ui->positiony->setValue(bj->m_position.y());
     ui->positionz->setValue(bj->m_position.z());
+}
+
+#include "cloth.hpp"
+
+void MainWindow::on_pushButton_clicked()
+{
+    const QString &node_name = ui->treeWidget->selectedItems().first()->data(0, Qt::DisplayRole).toString();
+    node *n = ui->openGLWidget->root_node()->search(node_name);
+    if (n == 0) return;
+    Cloth *c = dynamic_cast<Cloth *>(n->get_entity());
+    if (c != 0) {
+        c->m_detach = true;
+    }
+}
+
+void MainWindow::on_positionx_3_valueChanged(double arg1)
+{
+    Environment::wind.setX(arg1);
+}
+
+void MainWindow::on_positionx_3_valueChanged(const QString &)
+{
+
+}
+
+void MainWindow::on_positiony_3_valueChanged(double arg1)
+{
+    Environment::wind.setY(arg1);
+}
+
+void MainWindow::on_positionz_3_valueChanged(double arg1)
+{
+    Environment::wind.setZ(arg1);
+}
+
+void MainWindow::on_positionx_4_valueChanged(double arg1)
+{
+    Environment::gravity.setX(arg1);
+}
+
+void MainWindow::on_positiony_4_valueChanged(double arg1)
+{
+    Environment::gravity.setY(arg1);
+}
+
+void MainWindow::on_positionz_4_valueChanged(double arg1)
+{
+    Environment::gravity.setZ(arg1);
+}
+
+void MainWindow::on_scalex_valueChanged(double arg1)
+{
+    const QString &node_name = ui->treeWidget->selectedItems().first()->data(0, Qt::DisplayRole).toString();
+    node *n = ui->openGLWidget->root_node()->search(node_name);
+    if (n == 0) return;
+    // node node
+}
+
+void MainWindow::on_positionx_2_valueChanged(double arg1)
+{
+    if (ui->treeWidget->selectedItems().empty()) return;
+    const QString &node_name = ui->treeWidget->selectedItems().first()->data(0, Qt::DisplayRole).toString();
+    node *n = ui->openGLWidget->root_node()->search(node_name);
+    if (n == 0) return;
+    const QVector3D p = n->get_transform().position();
+    n->get_transform().position(QVector3D(arg1, p.y(), p.z()));
+}
+
+void MainWindow::on_positiony_2_valueChanged(double arg1)
+{
+    if (ui->treeWidget->selectedItems().empty()) return;
+    const QString &node_name = ui->treeWidget->selectedItems().first()->data(0, Qt::DisplayRole).toString();
+    node *n = ui->openGLWidget->root_node()->search(node_name);
+    if (n == 0) return;
+    const QVector3D p = n->get_transform().position();
+    n->get_transform().position(QVector3D(p.x(), arg1, p.z()));
+}
+
+void MainWindow::on_positionz_2_valueChanged(double arg1)
+{
+    if (ui->treeWidget->selectedItems().empty()) return;
+    const QString &node_name = ui->treeWidget->selectedItems().first()->data(0, Qt::DisplayRole).toString();
+    node *n = ui->openGLWidget->root_node()->search(node_name);
+    if (n == 0) return;
+    const QVector3D p = n->get_transform().position();
+    n->get_transform().position(QVector3D(p.x(), p.y(), arg1));
 }

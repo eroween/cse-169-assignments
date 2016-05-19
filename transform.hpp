@@ -38,6 +38,25 @@ public:
 
 public:
 
+    const QVector3D     position(void) const
+    {
+        return QVector3D(m_local_matrix.column(3));
+    }
+
+    const QVector3D     scale(void) const
+    {
+        QVector3D x = QVector3D(m_local_matrix.row(0));
+        QVector3D y = QVector3D(m_local_matrix.row(1));
+        QVector3D z = QVector3D(m_local_matrix.row(2));
+        return QVector3D(x.length(), y.length(), z.length());
+    }
+
+
+    void    position(const QVector3D &vector)
+    {
+        this->m_local_matrix.setColumn(3, QVector4D(vector, 1.0f));
+    }
+
     void    translate(const QVector3D &vector)
     {
         this->m_local_matrix.translate(vector);
@@ -67,7 +86,7 @@ public:
         this->m_world_matrix = parent.world_matrix() * this->m_local_matrix;
     }
 
-private:
+public:
     ///
     /// \brief The local matrix of the transform.
     ///

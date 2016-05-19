@@ -3,12 +3,17 @@ attribute vec4 normal;
 attribute vec4 skin_weights;
 attribute vec4 skin_indices;
 
+varying vec4 frag_color;
 varying vec3 frag_normal;
 varying vec3 vertPos;
 
+
 uniform mat4 mvp;
+uniform mat4 m;
 uniform mat4 binding_matrices[32];
 uniform mat4 world_matrices[32];
+
+
 
 void main(void)
 {
@@ -58,6 +63,8 @@ void main(void)
                 * binding_matrices[idx.w]
                 * normal;
     }
-    frag_normal = mvp * nrml;
+    frag_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    frag_normal = m * nrml;
+    vertPos = m * pos;
     gl_Position = mvp * pos;
 }

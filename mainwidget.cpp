@@ -42,6 +42,9 @@
 #include <QMouseEvent>
 #include <math.h>
 
+#include "animation.hpp"
+#include "animationloader.hpp"
+#include "animationplayer.hpp"
 #include "mainwidget.h"
 #include "node.hpp"
 #include "entity.hpp"
@@ -68,11 +71,12 @@ MainWidget::~MainWidget()
 
 void MainWidget::timerEvent(QTimerEvent *) {
     if (this->m_node != 0)
-        this->m_node->update();
+        this->m_node->update(0.012f);
     this->update();
 }
 
-
+#include "cloth.hpp"
+#include "plane.hpp"
 
 void MainWidget::initializeGL() {
     initializeOpenGLFunctions();
@@ -92,6 +96,24 @@ void MainWidget::initializeGL() {
 //    glEnable(GL_CULL_FACE);
     this->m_timer.start(12, this);
     qDebug() << "gl initialised";
+
+    node *child = new node();
+    child->name("cloth");
+    child->get_transform().translate(QVector3D(0, 2, 0));
+    child->get_transform().rotate(45, QVector3D(0, 1, 0));
+    Cloth *c = new Cloth(&program, child);
+    c->init(10, 10, 0.2);
+    child->set_entity(c);
+    this->m_node->add_child(child);
+
+    child = new node();
+    child->name("ground");
+    object *obj = new object(&this->program, &this->program, child);
+    obj->set_mesh(new Plane(QVector3D(-10, -2, -10), QVector3D(10, -2, 10), &program));
+    child->set_entity(obj);
+    this->m_node->add_child(child);
+
+    this->update_tree();
 }
 
 void MainWidget::resizeGL(int w, int h) {
@@ -101,13 +123,14 @@ void MainWidget::resizeGL(int w, int h) {
     this->m_projection.setToIdentity();
     this->m_projection.perspective(fov, aspect, zNear, zFar);
     this->m_view.setToIdentity();
-    this->m_view.lookAt(QVector3D(0, 4, 4), QVector3D(0,0,0), QVector3D(0,1,0));
+    this->m_view.lookAt(QVector3D(0, 2, -10), QVector3D(0,0,0), QVector3D(0,1,0));
 }
 
 void MainWidget::paintGL() {
 
+
     if (m_load) {
-        this->load(skel_name, skin_name);
+        this->load(skel_name, skin_name, anim_name);
         m_load = false;
     }
 
@@ -117,22 +140,26 @@ void MainWidget::paintGL() {
         this->m_node->render(this->m_projection, this->m_view);
 }
 
-void MainWidget::load(const QString &skel_file, const QString &skin_file) {
+void MainWidget::load(const QString &skel_file, const QString &skin_file, const QString &anim_file) {
     skeleton_loader skel_loader;
     skin_loader s_loader;
+    AnimationLoader     anim_loader;
 
     node *child = new node();
     child->name(skin_file);
     object *obj = new object(&this->program, &this->program2, child);
     obj->set_skeleton(skel_loader.load(skel_file));
+
     mesh *m = s_loader.load(skin_file);
     m->precompute(&this->program2);
     obj->set_mesh(m);
     child->set_entity(obj);
+
+    child->animation_player(new AnimationPlayer(anim_loader.load(anim_file)));
+
     this->m_node->add_child(child);
 
     this->update_tree();
-
 }
 
 #include <QMainWindow>

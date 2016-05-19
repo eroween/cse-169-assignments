@@ -3,10 +3,12 @@
 
 #include <QOpenGLFunctions>
 
+
 #include    "transform.hpp"
 #include    "entity.hpp"
 
 class   animation;
+class   AnimationPlayer;
 
 class node : protected QOpenGLFunctions
 {
@@ -43,6 +45,13 @@ public:
         this->m_entity = entity;
     }
 
+    void    animation_player(AnimationPlayer *ap)
+    {
+        this->m_animation_player = ap;
+    }
+
+    AnimationPlayer *m_animation_player;
+
 public:
     ///
     /// \brief name Getter for the node name.
@@ -65,7 +74,7 @@ public:
     ///
     /// \brief update the node and the node childrens.
     ///
-    void    update(void);
+    void    update(float elapsed);
 
     ///
     /// \brief render the node and the node childrens.
@@ -99,7 +108,7 @@ public:
         return this->m_childrens;
     }
 
-private:
+public:
     ///
     /// \brief m_name The name of the node.
     ///
