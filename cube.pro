@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     springdamper.cpp \
     environment.cpp \
     triangle.cpp \
-    plane.cpp
+    plane.cpp \
+    fluidsystem.cpp
 
 SOURCES += \
     mainwidget.cpp \
@@ -57,7 +58,9 @@ HEADERS += \
     springdamper.hpp \
     environment.hpp \
     triangle.hpp \
-    plane.hpp
+    plane.hpp \
+    fluidsystem.hpp \
+    sphere.hpp
 
 RESOURCES += \
     shaders.qrc \
@@ -68,7 +71,12 @@ target.path =
 INSTALLS += target
 
 DISTFILES += \
-    anim_vertex.glsl
+    anim_vertex.glsl \
+    instanced_render.vsh \
+    instanced.vert
 
 FORMS += \
     mainwindow.ui
+
+QMAKE_CXXFLAGS+= -fopenmp
+QMAKE_LFLAGS +=  -fopenmp

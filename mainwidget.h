@@ -85,6 +85,7 @@ private:
     /// Totally dumb, but I don't have a lot of time to do something great.
     QOpenGLShaderProgram    program;
     QOpenGLShaderProgram    program2;
+    QOpenGLShaderProgram    program3;
 
 
     bool m_load;

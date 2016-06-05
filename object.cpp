@@ -38,10 +38,10 @@ object::render(const QMatrix4x4 &projection, const QMatrix4x4 &view, const QMatr
 
         this->m_skin_shader_program->setUniformValue("lights[0].position", QVector3D(3.0, 0.0, -3.0));
         this->m_skin_shader_program->setUniformValue("lights[1].position", QVector3D(-3.0, 0.0, -3.0));
-        this->m_skin_shader_program->setUniformValue("lights[0].ambient", QVector3D(0.1, 0.0, 0.0));
-        this->m_skin_shader_program->setUniformValue("lights[1].ambient", QVector3D(0.0, 0.1, 0.0));
-        this->m_skin_shader_program->setUniformValue("lights[0].diffuse", QVector3D(0.5, 0.0, 0.0));
-        this->m_skin_shader_program->setUniformValue("lights[1].diffuse", QVector3D(0.0, 0.5, 0.0));
+        this->m_skin_shader_program->setUniformValue("lights[0].ambient", QVector3D(0.1, 0.1, 0.1));
+        this->m_skin_shader_program->setUniformValue("lights[1].ambient", QVector3D(0.1, 0.1, 0.1));
+        this->m_skin_shader_program->setUniformValue("lights[0].diffuse", QVector3D(0.5, 0.5, 0.5));
+        this->m_skin_shader_program->setUniformValue("lights[1].diffuse", QVector3D(0.5, 0.5, 0.5));
         this->m_skin_shader_program->setUniformValue("lights[0].specular", QVector3D(1.0, 1.0, 1.0));
         this->m_skin_shader_program->setUniformValue("lights[1].specular", QVector3D(1.0, 1.0, 1.0));
 
